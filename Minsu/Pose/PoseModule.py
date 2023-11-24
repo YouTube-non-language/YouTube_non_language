@@ -145,7 +145,9 @@ def main() :
         # 1 밀리세컨드 만큼 딜레이와 'q' 키가 눌리면 루프를 종료합니다
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
+        
+    cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__" :
     main()
