@@ -111,7 +111,7 @@ class poseDetector() :
 
 
 def main() :
-    cap = cv2. VideoCapture("영상 위치")
+    cap = cv2.VideoCapture("영상 위치 or 웹캠이면 : 0 입력")
     pTime = 0
     detector = poseDetector()
     while True :
@@ -142,8 +142,9 @@ def main() :
         # 영상 보여주기
         cv2.imshow("Image", img)
         
-        # 1 밀리세컨드 만큼 딜레이
-        cv2.waitKey(1)
+        # 1 밀리세컨드 만큼 딜레이와 'q' 키가 눌리면 루프를 종료합니다
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 
 if __name__ == "__main__" :
