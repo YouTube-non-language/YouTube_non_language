@@ -34,27 +34,20 @@ emotion_data_list = []
 connection = mysql.connector.connect(**DB_CONFIG)
 cursor = connection.cursor()
 
-# 테이블 생성 함수
-def create_table(cursor):
-    create_table_query = """
-    CREATE TABLE IF NOT EXISTS emotion_data (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        video_name VARCHAR(255),
-        angry INT,
-        disgust INT,
-        fear INT,
-        happy INT,
-        sad INT,
-        surprise INT,
-        neutral INT
-    )
-    """
-    cursor.execute(create_table_query)
+# AWS S3에서 가장 최근 동영상 가져오기
+def download_latest_video_from_s3(local_folder_path):
+    objects = s3.list_objects(Bucket=BUCKET_NAME)['Contents']
+    video_objects = [obj['Key'] for obj in objects if obj['Key'].endswith('.mp4')]
 
-# 테이블 생성
-create_table(cursor)
+    if video_objects:
+        # 가장 최근 동영상 선택
+        latest_video_object = max(video_objects, key=lambda x: objects[video_objects.index(x)]['LastModified'])
+        download_video_from_s3(latest_video_object, os.path.join(local_folder_path, latest_video_object))
+        print(f"가장 최근 동영상 {latest_video_object}를 다운로드 중입니다.")
+    else:
+        print("다운로드할 동영상이 없습니다.")
 
-# AWS S3에서 모든 객체 목록 가져오기
+# AWS S3에서 동영상 다운로드 함수
 def download_video_from_s3(file_name, local_path):
     try:
         print(f"{file_name}를 {local_path}로 다운로드 중입니다.")
@@ -64,19 +57,14 @@ def download_video_from_s3(file_name, local_path):
     except Exception as e:
         print(f"{file_name} 다운로드 중 오류 발생: {e}")
 
-def download_all_videos_from_s3(local_folder_path):
-    objects = s3.list_objects(Bucket=BUCKET_NAME)['Contents']
-    video_objects = [obj['Key'] for obj in objects if obj['Key'].endswith('.mp4')]
-
-    for video_object in video_objects:
-        # 저장될 로컬 경로를 현재 작업 디렉토리에 설정
-        download_video_from_s3(video_object, os.path.join(local_folder_path, video_object))
+# 동영상 다운로드 함수 호출
+download_latest_video_from_s3(local_folder_path)
 
 # 얼굴 감지기 초기화 (Haar Cascade 사용)
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 # 동영상 및 감정 분석 모델 다운로드
-download_all_videos_from_s3(local_folder_path)
+download_latest_video_from_s3(local_folder_path)
 download_video_from_s3('emotion_model.h5', 'emotion_model.h5')
 
 # 감정 레이블
