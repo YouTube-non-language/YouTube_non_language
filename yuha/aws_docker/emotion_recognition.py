@@ -1,3 +1,5 @@
+# ECS용 - 모든 변수는 환경변수로 잡아놓음 - 성공!!!
+
 import cv2
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -7,27 +9,24 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 import mysql.connector
 
-# AWS S3 및 MySQL 연결 정보
-AWS_ACCESS_KEY = 'your_access_key'
-AWS_SECRET_KEY = 'your_secret_key'
-BUCKET_NAME = 'your_s3_bucket_name'
 
-DB_CONFIG = {
-	  'host': 'your_rds_host',
-    'user': 'your_username',
-    'password': 'your_password',
-    'database': 'your_database',
-}
+# AWS S3 및 MySQL 연결 정보
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
+
+connection = mysql.connector.connect(
+    host = os.environ.get('USER_HOST'),
+    user = os.environ.get('USER_ID'),
+    password = os.environ.get('USER_PASSWORD'),
+    database = os.environ.get('USER_DB')
+    )
+
+cursor = connection.cursor()
 
 # S3 설정
-s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+s3 = boto3.client('s3', aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'), aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'))
 
 # 동영상 파일이 있는 로컬 경로 (현재 코드가 실행되는 디렉토리)
 local_folder_path = os.getcwd()  # 현재 작업 디렉토리를 얻음
-
-# MySQL 연결
-connection = mysql.connector.connect(**DB_CONFIG)
-cursor = connection.cursor()
 
 # AWS S3에서 동영상 다운로드 함수
 def download_video_from_s3(file_name, local_path):
