@@ -1,4 +1,0 @@
-opencv-python==4.8.1.78
-tensorflow==2.15.0
-boto3==1.28.77
-mysql-connector-python==8.2.0
