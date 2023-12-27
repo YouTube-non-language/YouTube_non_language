@@ -149,7 +149,18 @@ class poseDetector() :
         return lmList
 
 
-def s3_lmp(s3_object_key):
+def s3_lmp(s3_object_key : str):
+    """
+    Input
+        1) s3_object_key (str) :
+            S3에서 영상이 있는 경로
+    Output
+        1) filename (str) :
+            작업한 파일의 이름
+        
+        2) json_data (list):
+            작업한 결과물, 각 프레임 단위로 딕셔너리 형태로 되어있는 리스트
+    """
     # S3 클라이언트 생성
     s3 = boto3.client('s3', **S3)
 
@@ -205,6 +216,14 @@ def s3_lmp(s3_object_key):
 
 
 def user_rds_load(filename, json_data) :
+    """
+    Input
+        1) filename (str) :
+            작업한 파일의 이름
+        
+        2) json_data (list):
+            작업한 결과물, 각 프레임 단위로 딕셔너리 형태로 되어있는 리스트
+    """
     # MySQL에 연결
     connection = mysql.connector.connect(** RDS)
     cursor = connection.cursor()

@@ -1,6 +1,8 @@
 import math
 import numpy as np
 import mysql.connector
+import plotly as plt
+import seaborn as sns
 
 import sys
 
@@ -40,20 +42,26 @@ def rds_heatmap_720(table_name : str, teacher : str, book_name : str, lecture_nu
     Input
         1) table_name (str) :
             RDS에서 히트맵을 만들 테이블 이름
+            
         2) teacher (str) :
             RDS에서 히트맵을 만들고 싶은 선생님의 이름
+            
         3) book_name (str) :
             RDS에서 히트맵을 만들고 싶은 책의 이름
+            
         4) lecture_num (int) :
             RDS에서 히트맵을 만들고 싶은 강의 번호
+            
         5) only_hand (bool) :
             손을 포함한 상반신 전체와 오직 손만 선택
+            
         6) resolution (int) :
             히트맵의 해상도 조절 1 / resolution
     Output
-        1) heatmap (numpy.ndarray) :
-            히트맵 그래프를 그릴수 있는 넘파이 배열
-        1) hand_list (dict) :
+        1) heatmap :
+            히트맵 그래프
+            
+        2) hand_list (dict) :
             양 팔의 어깨와 손목의 거리들의 분산과 표준 편차
     """
     if only_hand == True:
@@ -85,10 +93,10 @@ def rds_heatmap_720(table_name : str, teacher : str, book_name : str, lecture_nu
     heatmap_size = (int(720 / resolution), int(1280 / resolution))
 
     # 그래프의 크기와 DPI 설정 (도화지 크기 설정)
-    # plt.subplots(figsize=(int(640), int(360)), dpi=4)
+    plt.subplots(figsize=(int(640), int(360)), dpi=4)
 
     # 히트맵 생성
-    heatmap = np.zeros(heatmap_size)
+    np_heatmap = np.zeros(heatmap_size)
 
     # 히트맵에 좌표 추가
     for frame_data in data:
@@ -97,10 +105,10 @@ def rds_heatmap_720(table_name : str, teacher : str, book_name : str, lecture_nu
             y = int(frame_data[i + 1] / resolution)
 
             if 0 <= x < heatmap_size[1] and 0 <= y < heatmap_size[0]:
-                heatmap[y, x] += 1  # 해당 좌표의 값을 1씩 증가시킴
+                np_heatmap[y, x] += 1  # 해당 좌표의 값을 1씩 증가시킴
     
     # 히트맵 그리기 ('viriresolution', 'plasma', 'inferno', 'magma')
-    # sns.heatmap(heatmap, cmap = 'plasma')
+    heatmap = sns.heatmap(np_heatmap, cmap = 'plasma')
     
     # 연결 닫기
     cursor.close()
