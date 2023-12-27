@@ -1,40 +1,15 @@
 import math
 import numpy as np
-import mysql.connector
-import plotly as plt
 import seaborn as sns
+import mysql.connector
+import matplotlib.pyplot as plt
 
 import sys
 
 # 엑세스키 유출을 막기 위해 비공유 폴더에서 불러옵니다!!!
 sys.path.append("D:/GitHub/local_key")
 from settings import RDS
-
-LMP = {
-0 : "nose",
-1 : "l_eye_i",
-2 : "l_eye",
-3 : "l_eye_o",
-4 : "r_eye_i",
-5 : "r_eye",
-6 : "r_eye_o",
-7 : "l_ear",
-8 : "r_ear",
-9 : "l_mouth",
-10 : "r_mouth",
-11 : "l_shldr",
-12 : "r_shldr",
-13 : "l_elbow",
-14 : "r_elbow",
-15 : "l_wrist",
-16 : "r_wrist",
-17 : "l_pinky",
-18 : "r_pinky",
-19 : "l_index",
-20 : "r_index",
-21 : "l_thumb",
-22 : "r_thumb"
-}
+from settings import LMP
 
 
 def rds_heatmap_720(table_name : str, teacher : str, book_name : str, lecture_num : int, only_hand : bool = False, resolution : int = 3) :
