@@ -3,39 +3,16 @@ import cv2
 import boto3
 import mysql.connector
 import mediapipe as mp
+from botocore.exceptions import ClientError
+from botocore.exceptions import NoCredentialsError
 
 import sys
 
 # 엑세스키 유출을 막기 위해 비공유 폴더에서 불러옵니다!!!
 sys.path.append("D:/GitHub/local_key")
-from settings import S3
 from settings import RDS
-
-LMP = {
-0 : "nose",
-1 : "l_eye_i",
-2 : "l_eye",
-3 : "l_eye_o",
-4 : "r_eye_i",
-5 : "r_eye",
-6 : "r_eye_o",
-7 : "l_ear",
-8 : "r_ear",
-9 : "l_mouth",
-10 : "r_mouth",
-11 : "l_shldr",
-12 : "r_shldr",
-13 : "l_elbow",
-14 : "r_elbow",
-15 : "l_wrist",
-16 : "r_wrist",
-17 : "l_pinky",
-18 : "r_pinky",
-19 : "l_index",
-20 : "r_index",
-21 : "l_thumb",
-22 : "r_thumb"
-}
+from settings import LMP
+from settings import S3
 
 
 class poseDetector() :
@@ -276,8 +253,38 @@ def user_rds_load(filename, json_data) :
     connection.close()
 
 
+def get_latest_video_name(bucket_name):
+    """
+    Input
+        1) bucket_name (str) :
+            작업할 버킷의 경로
+        
+        2) latest_video_name (str):
+            해당 버킷에 마지막으로 적재된 데이터
+    """
+    s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
+    
+    # S3 버킷 내에서 객체 목록을 가져옴
+    response = s3.list_objects(Bucket=bucket_name)
+    
+    # 가장 최근에 업로드된 객체 선택
+    latest_object = max(response['Contents'], key=lambda x: x['LastModified'])
+    
+    # 파일 이름 반환 (확장자 제외)
+    latest_video_name = os.path.splitext(os.path.basename(latest_object['Key']))[0]
+    
+    return latest_video_name
+
+
 if __name__ == "__main__" :
-    # s3_object_key 환경 변수의 값을 얻음
-    s3_object_key = os.environ.get('s3_object_key')
-    filename, json_data = s3_lmp(s3_object_key)
+    # S3 버킷 이름
+    print("os.environ: ", os.environ)
+    s3_bucket_name = "big4-team3"
+    
+    # 최근에 업로드된 동영상 이름 가져오기
+    latest_video_name = get_latest_video_name(s3_bucket_name)
+    print('latest_video_name : ', latest_video_name)
+    
+    # 모듈 실행
+    filename, json_data = s3_lmp(latest_video_name)
     user_rds_load(filename, json_data)
