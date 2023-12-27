@@ -149,7 +149,7 @@ class poseDetector() :
         return lmList
 
 
-def s3_lmp(s3_object_key : str):
+def s3_lmp(s3_object_key : str) :
     """
     Input
         1) s3_object_key (str) :
@@ -231,7 +231,7 @@ def user_rds_load(filename, json_data) :
     print(f"'{filename}' 시작")
     
     # 테이블 이름 및 설정
-    table_name = "VIDEO_FEATURE_LMP_user_test"
+    table_name = "USER_LMP"
     points = list(range(23)) # 랜드마크 포인트
     
     # JSON 데이터를 기반으로 테이블 생성 쿼리를 동적으로 생성
@@ -275,8 +275,9 @@ def user_rds_load(filename, json_data) :
     cursor.close()
     connection.close()
 
-s3_object_key = "your/video/object/01강유리수의소수표현(1)_EBS중학뉴런수학2(상).mp4"
 
 if __name__ == "__main__" :
+    # s3_object_key 환경 변수의 값을 얻음
+    s3_object_key = os.environ.get('s3_object_key')
     filename, json_data = s3_lmp(s3_object_key)
     user_rds_load(filename, json_data)
