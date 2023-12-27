@@ -3,8 +3,6 @@ import cv2
 import boto3
 import mysql.connector
 import mediapipe as mp
-from botocore.exceptions import ClientError
-from botocore.exceptions import NoCredentialsError
 
 import sys
 
@@ -126,10 +124,13 @@ class poseDetector() :
         return lmList
 
 
-def s3_lmp(s3_object_key : str) :
+def s3_lmp(bucket_name :str, s3_object_key : str) :
     """
     Input
-        1) s3_object_key (str) :
+        1) bucket_name (str) :
+            S3 버킷 이름
+            
+        2) s3_object_key (str) :
             S3에서 영상이 있는 경로
     Output
         1) filename (str) :
@@ -140,9 +141,6 @@ def s3_lmp(s3_object_key : str) :
     """
     # S3 클라이언트 생성
     s3 = boto3.client('s3', **S3)
-
-    # S3 버킷 이름과 다운로드할 객체 키
-    bucket_name = 'team3-test-videos'
 
     # 로컬에 저장할 경로 및 파일명
     local_folder_path = os.getcwd()
@@ -279,12 +277,12 @@ def get_latest_video_name(bucket_name):
 if __name__ == "__main__" :
     # S3 버킷 이름
     print("os.environ: ", os.environ)
-    s3_bucket_name = "big4-team3"
+    bucket_name = "big4-team3"
     
     # 최근에 업로드된 동영상 이름 가져오기
-    latest_video_name = get_latest_video_name(s3_bucket_name)
+    latest_video_name = get_latest_video_name(bucket_name)
     print('latest_video_name : ', latest_video_name)
     
     # 모듈 실행
-    filename, json_data = s3_lmp(latest_video_name)
+    filename, json_data = s3_lmp(bucket_name, latest_video_name)
     user_rds_load(filename, json_data)
