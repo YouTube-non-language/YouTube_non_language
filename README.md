@@ -24,7 +24,9 @@
 <br></br>
 
 ## 역할 분담
-![timeline](./images/timeline.png)
+<p align="center">
+  <img src="./images/timeline.png">
+</p>
 <br></br>
 
 ## 기능
@@ -40,13 +42,16 @@
 | --- | --- |
 | 웹 | Plotly Dash를 활용한 Web Page 제작 |
 | 그래프 | 분석 결과물들을 시각적으로 비교분석 할 수 있는 Plotly 패키지 사용 |
-| 데이터베이스 | AWS S3 서비스를 이용하여, 사용자가 업로드한 영상을 저장하고, 추출된 텍스트를 저장하는데 사용 <br>AWS RDS 서비스를 이용하여, 분석한 결과에 대한 데이터를 저장하고 실시간 처리되는 비언어 Feature를 적재하는데 사용 |
+| 데이터베이스 | - AWS S3 서비스를 이용하여, 사용자가 업로드한 영상을 저장하고, 추출된 텍스트를 저장하는데 사용 <br>- AWS RDS 서비스를 이용하여, 분석한 결과에 대한 데이터를 저장하고 실시간 처리되는 비언어 Feature를 적재하는데 사용 |
 | 모델링 | AWS ECR 서비스를 이용하여, Docker Image를 push하여 Lambda로 구동 |
 | 서버 | AWS ECS 서비스를 이용하여, 사용자로 부터 받은 동영상 처리 및 웹 서버 배포 |
+
 <br></br>
 
 ### Mock Up 
-![web](./images/Web_Mockup.png)
+<p align="center">
+  <img src="./images/Web_Mockup.png">
+</p>
 
 EBS 강의를 인기/비인기 영상으로 나누어 비언어적 특징에 중점을 두고 분석하여 나온
 결과값을 RDS에 저장하여 비교 데이터로 만든다. 
@@ -55,44 +60,59 @@ Plotly Dash를 활용하여 사용자가 강의 동영상을 업로드 시, 분�
 <br></br>
 
 ### AWS Architecture
-![aws](./images/Final_AWS_Architecture.png)
+<p align="center">
+  <img src="./images/Final_AWS_Architecture.png">
+</p>
 <br></br>
 
 
 ## Modeling
 ### Face Detection and Mesh
 
-![1](./images/1.png)
+<p align="center">
+  <img src="./images/1.png">
+</p>
 
 CNN 구조에 사진을 넣기 전 2D alignment 와 3D alignment를 거쳐서 사진이 정면을 바라 보도록 해주고 (h)와 같이 새로운 측면에서의 데이터 수집했다. 얼굴 이미지 내에서 변화를 제거하여 모든 얼굴이 카메라를 응시하는 것 처럼 보이도록 수정(2D alignment) 했다. 
 2D 정렬은 이차원에서 변화를 정규화 시켜줄 수 있게 해주지만 평면 이외에 편차는 정규화 할 수 없으므로 3D로 변환(3D alignment)해 준다.
 
 
-![2](./images/2.png)
+<p align="center">
+  <img src="./images/2.png">
+</p>
 
 앞서 설명한 모든 과정을 mediapipe를 통해 모델로 Face Mesh 모델로 사용 가능
 
 
-![3](./images/3.png) 
-
+<p align="center">
+  <img src="./images/3.png">
+</p>
 영상 강의 총 프레임과 face landmark 검출되는 프레임 수를 확인하여 영상 내에서 검출되는 확률 확인
 
-![3-1](./images/3-1.png)
+<p align="center">
+  <img src="./images/3-1.png">
+</p>
 
 옆 모습을 얼굴로 인식하는 문제점이 발생했는데
 
-![4](./images/4.png)
+<p align="center">
+  <img src="./images/4.png">
+</p>
  
 min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서 0.85로 수정함으로써 모델을 튜닝할 수 있었다.
 
-![5](./images/5.png)
+<p align="center">
+  <img src="./images/5.png">
+</p>
 <br></br>
 
 ### Sentimental
 
 <p align="center">감정 분석 모델 학습</p>
 
-![6](./images/6.png)
+<p align="center">
+  <img src="./images/6.png">
+</p>
  
 - CNN과 VGG 모델을 탐구한 후, 7개의 감정 클래스로 이루어진 fer2013 데이터셋을 사용한 모델학습으로 감정 분석 모델을 제작했다. 
 - 관련 모듈 임포트. 데이터셋 로딩 함수 정의. 데이터 분할 등 코드를 작성하고, epoch 10으로 모델학습을 진행했다.
@@ -100,14 +120,18 @@ min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서
 
 <p align="center">감정 분석 모델 선택 : 커스텀 CNN 모델</p>
 
-![7](./images/7.png)
+<p align="center">
+  <img src="./images/7.png">
+</p>
  
 - 커스텀 CNN과 VGG로 만든 모델을 각각 감정분석을 실행해보았는데, VGG로 만든 모델 감정분석은 전체 프레임당 영상을 세세하게 분석하기 때문에, 영상인식시간 + 분석시간(총 영상 길이의 2배 시간)이 소요되었다. 
 - 또한 VGG 모델은 영상 감정 분석 중, 얼굴이 아닌 위치에서도 감정이 표현되는 오류를 나타내었다.
 - 감정 분석 인식 정확도 향상과 분석 처리 속도 향상을 위해 VGG가 아닌 커스텀 CNN 모델을 사용하기로 결정했다.
 <br></br>
 
-![8](./images/8.png)
+<p align="center">
+  <img src="./images/8.png">
+</p>
 
 - 각 동영상 파일의 프레임을 읽어들이고, 그레이스케일로 변환한 후에 얼굴을 감지했다. 감지된 얼굴 중 첫번째 얼굴에 대해서만 처리를 진행했다.
 - 전체 프레임당 감정분석을 수행시 얼굴의 감정이 지나치게 많이 변하기 때문에 프레임마다 5번의 감정 분석을 수행하여 얼굴의 감정을 추정했다.
@@ -117,7 +141,9 @@ min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서
 
 <p align="center">인기/비인기 강의 감정분석 결과</p>
 
-![9](./images/9.png)
+<p align="center">
+  <img src="./images/9.png">
+</p>
 
 -	인기/비인기 강의로 선정된 3개의 강좌를 위와 같이 커스텀 CNN모델을 사용하여 감정분석을 진행하고 각 결과값을 json파일로 저장했다.
 -	json 파일에 저장되어 있는 감정분석 결과값을 각 강의별로 평균을 내고 그래프 형식으로 나타낸 후 비교하였다.
@@ -143,10 +169,14 @@ min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서
 
 전체 파이프라인은 아래와 같다.
 
-![10](./images/10.png)
+<p align="center">
+  <img src="./images/10.png">
+</p>
 
 우수 강사의 강좌가 성취 기준과 상대적으로 더 관련 있는 것으로 결과가 나왔습니다. 하지만 비교할 수 있는 대상의 강좌 수가 너무 적기 때문에, 설득력을 높이기 위한 통계적 검증은 시행하지 못했다.
-![11](./images/11.png)
+<p align="center">
+  <img src="./images/11.png">
+</p>
 <br></br>
 
 
@@ -198,7 +228,9 @@ Pose Landmarker
 <br></br>
 
 #### 개발 환경 
-![program](./images/12.png)
+<p align="center">
+  <img src="./images/12.png">
+</p>
 opencv-python (ver.4.8.1.78)
 <br>numpy (ver.1.24.3)
 <br>media pipe (ver.0.10.8)
