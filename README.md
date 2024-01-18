@@ -1,13 +1,11 @@
 # 비언어 특성 중심 EBS 강의 영상 분석
 
+<p align="right">
 빅데이터 4기 3조 미뇽논버벌
 <br>임유하(조장), 김민수, 이형석, 전혁선, 이찬녕(초기 참여)
-<br></br>
+<br>2023.11.20. ~ 2024.01.02
+</p>
 
-
-## Time Frame
-2023.11.20. ~ 2024.01.02
-<br></br>
 
 
 ## 요약
@@ -27,7 +25,6 @@
 <p align="center">
   <img src="./images/timeline.png">
 </p>
-<br></br>
 
 ## 기능
 ### User
@@ -46,7 +43,6 @@
 | 모델링 | AWS ECR 서비스를 이용하여, Docker Image를 push하여 Lambda로 구동 |
 | 서버 | AWS ECS 서비스를 이용하여, 사용자로 부터 받은 동영상 처리 및 웹 서버 배포 |
 
-<br></br>
 
 ### Mock Up 
 <p align="center">
@@ -63,7 +59,6 @@ Plotly Dash를 활용하여 사용자가 강의 동영상을 업로드 시, 분�
 <p align="center">
   <img src="./images/Final_AWS_Architecture.png">
 </p>
-<br></br>
 
 
 ## Modeling
@@ -103,8 +98,8 @@ min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서
 
 <p align="center">
   <img src="./images/5.png">
-</p>
 <br></br>
+</p>
 
 ### Sentimental
 
@@ -160,7 +155,6 @@ min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서
 -	처음 부터 수집되는 json파일을 형태를 RDS에 바로 적재가 가능한 형식으로 x, y로 키를 나누고, 강의 영상의 특성상 하반신이 나오지 않아서 처음부터 상반신의 좌표만 추출하여 저장 하는 것으로 수정하였다.
 -	수정된 json파일로 RDS에 적재, 적재 시간은 크게 변하지 않았다.
 -	RDS에 있는 데이터를 가져와서 강사별, 교재별, 강의별로 상반신의 히트맵을 시각화 하고, 손 부분만을 히트맵으로 시각화 하면서 해당 히트맵을 시각화 할떄 쓰인 데이터를 기반으로 어깨와 손목 사이의 거리에 대한 분산과 표준 편차를 보여줄 수 있도록 하였다. 
-<br></br>
 
 ### Text Comparison	
 특정 과목을 교육할 때 그 과목에 대한 가이드라인이 있을 것이라 판단했다. 그 가이드라인은 ‘국가 교육과정 정보센터’에서 찾을 수 있었고, ‘수학 성취 기준’과 강의 내용은 얼마나 유사한지 비교했다. 
@@ -176,8 +170,8 @@ min tracking confidence는 얼굴 추적을 위한 최소 신뢰도로 0.5에서
 우수 강사의 강좌가 성취 기준과 상대적으로 더 관련 있는 것으로 결과가 나왔습니다. 하지만 비교할 수 있는 대상의 강좌 수가 너무 적기 때문에, 설득력을 높이기 위한 통계적 검증은 시행하지 못했다.
 <p align="center">
   <img src="./images/11.png">
-</p>
 <br></br>
+</p>
 
 
 ## TroubleShooting
@@ -231,24 +225,25 @@ Pose Landmarker
 <p align="center">
   <img src="./images/12.png">
 </p>
-opencv-python (ver.4.8.1.78)
-<br>numpy (ver.1.24.3)
-<br>media pipe (ver.0.10.8)
-<br>boto3 (ver.1.28.77)
-<br>mysql-connector-python (ver.8.2.0)
-<br>pandas (ver.2.0.3)
-<br>seaborn (ver.0.13.0)
-<br>matplotlib (ver.3.7.2)
-<br>tensorflow (ver.2.15.0)
-<br>dash (ver.2.14.2)
-<br>moviepy  (ver.1.0.3)
-<br>nltk (ver.3.8.1)
-<br>plotly (ver.5.18.0)
-<br>scikit_learn (ver.1.3.2)
-<br>scipy (ver.1.11.4)
-<br>SpeechRecognition (ver.3.10.1)
-<br>SQLAlchemy (ver.1.4.50)
-<br>pymysql (ver.1.4.6)
+
+- opencv-python (ver.4.8.1.78)
+- numpy (ver.1.24.3)
+- media pipe (ver.0.10.8)
+- boto3 (ver.1.28.77)
+- mysql-connector-python (ver.8.2.0)
+- pandas (ver.2.0.3)
+- seaborn (ver.0.13.0)
+- matplotlib (ver.3.7.2)
+- tensorflow (ver.2.15.0)
+- dash (ver.2.14.2)
+- moviepy  (ver.1.0.3)
+- nltk (ver.3.8.1)
+- plotly (ver.5.18.0)
+- scikit_learn (ver.1.3.2)
+- scipy (ver.1.11.4)
+- SpeechRecognition (ver.3.10.1)
+- SQLAlchemy (ver.1.4.50)
+- pymysql (ver.1.4.6)
 <br></br>
 
 #### 참고 
